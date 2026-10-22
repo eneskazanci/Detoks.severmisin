@@ -1,0 +1,19 @@
+{
+  "eventDate": "2026-10-22T20:00:00+03:00",
+  "whatsappUrl": "https://chat.whatsapp.com/ItHdw0hFUecEZMRWCLAoMU",
+  "eventTitle": "Tıbbi Detoks ve Bütünsel Arınma",
+  "posterDateText": "",
+  "hidePosterStaticDate": true,
+  "posterSlides": [
+    {
+      "id": "slide-1",
+      "imageUrl": "/kapak-toplanti.jpg",
+      "title": "CANLI ZOOM TOPLANTISI",
+      "caption": "Katılım WhatsApp Gruplarımız üzerindendir.",
+      "badge": "CANLI & ÜCRETSİZ"
+    }
+  ],
+  "slideIntervalSeconds": 5,
+  "slideTransitionEffect": "glow-shimmer",
+  "updatedAt": "2026-10-22T20:00:00+03:00"
+}

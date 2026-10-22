@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "./detox-style.css";
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Montserrat', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #F8FAF8;
+    color: #1F2937;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Warm soft shadows for light theme */
+.shadow-soft {
+  box-shadow: 0 4px 20px -2px rgba(22, 101, 52, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-card-hover {
+  box-shadow: 0 12px 30px -4px rgba(22, 101, 52, 0.12), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-cta {
+  box-shadow: 0 8px 25px -4px rgba(22, 163, 74, 0.35);
+}
+
+.shadow-cta:hover {
+  box-shadow: 0 12px 30px -2px rgba(22, 163, 74, 0.45);
+}
+
+/* ========================================================================= */
+/* CANLI (ANIMATED LIVING) GRADIENTS                                          */
+/* ========================================================================= */
+@keyframes liveGradientLight {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes liveGradientDark {
+  0% {
+    background-position: 0% 40%;
+  }
+  50% {
+    background-position: 100% 60%;
+  }
+  100% {
+    background-position: 0% 40%;
+  }
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) scale(1.04);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(18px) scale(0.96);
+  }
+}
+
+/* Living Light Gradient background for Hero & Cards */
+.bg-live-gradient-light {
+  background: linear-gradient(
+    -45deg,
+    #F3F9F5,
+    #E8F7ED,
+    #FEF9EE,
+    #EAF5FF,
+    #F1FBF5
+  );
+  background-size: 350% 350%;
+  animation: liveGradientLight 14s ease infinite;
+}
+
+/* Living Dark Gradient background for Emotional Value section */
+.bg-live-gradient-dark {
+  background: linear-gradient(
+    -45deg,
+    #052E16,
+    #064E3B,
+    #134E4A,
+    #022C22,
+    #0F3D2E
+  );
+  background-size: 350% 350%;
+  animation: liveGradientDark 12s ease infinite;
+}
+
+/* Living Gradient for Banner Callout */
+.bg-live-gradient-banner {
+  background: linear-gradient(
+    135deg,
+    #ECFDF5,
+    #F0FDF4,
+    #FEF3C7,
+    #CCFBF1,
+    #F0FDF4
+  );
+  background-size: 300% 300%;
+  animation: liveGradientLight 10s ease infinite;
+}
+
+/* Floating animated orbs */
+.orb-float-1 {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+.orb-float-2 {
+  animation: floatReverse 10s ease-in-out infinite;
+}

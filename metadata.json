@@ -1,0 +1,8 @@
+{
+  "name": "Online Detoks Programı",
+  "description": "7 gün. Online. Birlikte. Beslenme, hareket, uzman desteği ve günlük WhatsApp takibiyle hayatını durdurmadan sağlıklı ritmine dön.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
