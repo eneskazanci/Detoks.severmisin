@@ -189,6 +189,8 @@ export interface PosterSlide {
 }
 
 export interface SiteContent {
+  doctorName?: string;
+  brandTitle?: string;
   announcementText: string;
   announcementSubtext: string;
   title: string;
@@ -252,6 +254,8 @@ export const DEFAULT_POSTER_SLIDES: PosterSlide[] = [
 ];
 
 export const DEFAULT_SITE_CONTENT: SiteContent = {
+  doctorName: 'DR. ABDULLAH KESGİN',
+  brandTitle: 'detox',
   announcementText: 'Kendinize bir akşam ayırın.',
   announcementSubtext: 'Ücretsiz canlı tanıtım semineri',
   title: 'Bedenine kulak ver. Değişime birlikte başlayalım.',
@@ -344,7 +348,9 @@ interface ContentContextType {
     newHidePosterStaticDate?: boolean,
     newPosterSlides?: PosterSlide[],
     newSlideIntervalSeconds?: number,
-    newSlideTransitionEffect?: SlideTransitionEffect
+    newSlideTransitionEffect?: SlideTransitionEffect,
+    newDoctorName?: string,
+    newBrandTitle?: string
   ) => Promise<{ success: boolean; message: string }>;
   resetToDefault: () => void;
   
@@ -491,6 +497,8 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
             eventDate: data.eventDate || prev.eventDate,
             whatsappUrl: data.whatsappUrl || prev.whatsappUrl,
             eventTitle: data.eventTitle || prev.eventTitle,
+            ...(data.doctorName !== undefined ? { doctorName: data.doctorName } : {}),
+            ...(data.brandTitle !== undefined ? { brandTitle: data.brandTitle } : {}),
             ...(data.posterDateText !== undefined ? { posterDateText: data.posterDateText } : {}),
             ...(data.hidePosterStaticDate !== undefined ? { hidePosterStaticDate: data.hidePosterStaticDate } : {}),
             ...(Array.isArray(data.posterSlides) && data.posterSlides.length > 0 ? { posterSlides: data.posterSlides } : {}),
@@ -595,12 +603,16 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     newHidePosterStaticDate?: boolean,
     newPosterSlides?: PosterSlide[],
     newSlideIntervalSeconds?: number,
-    newSlideTransitionEffect?: SlideTransitionEffect
+    newSlideTransitionEffect?: SlideTransitionEffect,
+    newDoctorName?: string,
+    newBrandTitle?: string
   ) => {
     setContent((prev) => ({
       ...prev,
       eventDate: newDate,
       whatsappUrl: newWhatsapp,
+      ...(newDoctorName !== undefined ? { doctorName: newDoctorName } : {}),
+      ...(newBrandTitle !== undefined ? { brandTitle: newBrandTitle } : {}),
       ...(newPosterDateText !== undefined ? { posterDateText: newPosterDateText } : {}),
       ...(newHidePosterStaticDate !== undefined ? { hidePosterStaticDate: newHidePosterStaticDate } : {}),
       ...(newPosterSlides !== undefined ? { posterSlides: newPosterSlides } : {}),
@@ -617,6 +629,8 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
           eventDate: newDate,
           whatsappUrl: newWhatsapp,
           eventTitle: content.eventTitle,
+          doctorName: newDoctorName !== undefined ? newDoctorName : content.doctorName,
+          brandTitle: newBrandTitle !== undefined ? newBrandTitle : content.brandTitle,
           posterDateText: newPosterDateText !== undefined ? newPosterDateText : content.posterDateText,
           hidePosterStaticDate: newHidePosterStaticDate !== undefined ? newHidePosterStaticDate : content.hidePosterStaticDate,
           posterSlides: newPosterSlides !== undefined ? newPosterSlides : content.posterSlides,

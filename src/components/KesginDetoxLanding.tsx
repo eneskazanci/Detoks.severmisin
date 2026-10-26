@@ -317,8 +317,12 @@ export const KesginDetoxLanding: React.FC = () => {
         <a href="/" className="brand" aria-label="Detox ana sayfa">
           <span className="brand-symbol">✳</span>
           <span>
-            detox
-            <span className="brand-sub">DR. ABDULLAH KESGİN</span>
+            {content.brandTitle || 'detox'}
+            {(content.doctorName !== undefined ? content.doctorName : 'DR. ABDULLAH KESGİN') && (
+              <span className="brand-sub">
+                {content.doctorName !== undefined ? content.doctorName : 'DR. ABDULLAH KESGİN'}
+              </span>
+            )}
           </span>
         </a>
 
@@ -979,7 +983,7 @@ export const KesginDetoxLanding: React.FC = () => {
       {/* ========================================================================= */}
       <footer className="wrap">
         <a href="/" className="brand">
-          ✳ detox
+          ✳ {content.brandTitle || 'detox'}
         </a>
         <span>İyi yaşam için bilinçli bir başlangıç.</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>

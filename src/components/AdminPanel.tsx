@@ -33,6 +33,8 @@ export const AdminPanel: React.FC = () => {
   const [copiedCode, setCopiedCode] = useState(false);
   
   // Quick Hostinger settings state
+  const [quickDoctorName, setQuickDoctorName] = useState(content.doctorName || 'DR. ABDULLAH KESGİN');
+  const [quickBrandTitle, setQuickBrandTitle] = useState(content.brandTitle || 'detox');
   const [quickEventDate, setQuickEventDate] = useState(content.eventDate || '2026-10-22T20:00:00+03:00');
   const [quickWhatsapp, setQuickWhatsapp] = useState(content.whatsappUrl || 'https://chat.whatsapp.com/ItHdw0hFUecEZMRWCLAoMU');
   const [quickPosterDateText, setQuickPosterDateText] = useState(content.posterDateText || '');
@@ -145,6 +147,8 @@ export const AdminPanel: React.FC = () => {
     setIsSavingHostinger(true);
     setHostingerStatus(null);
     updateContent({
+      doctorName: quickDoctorName,
+      brandTitle: quickBrandTitle,
       eventDate: quickEventDate,
       whatsappUrl: quickWhatsapp,
       posterDateText: quickPosterDateText,
@@ -161,7 +165,9 @@ export const AdminPanel: React.FC = () => {
       quickHidePosterStaticDate,
       slides,
       slideInterval,
-      slideEffect
+      slideEffect,
+      quickDoctorName,
+      quickBrandTitle
     );
     setIsSavingHostinger(false);
     setHostingerStatus(res.message);
@@ -170,6 +176,8 @@ export const AdminPanel: React.FC = () => {
 
   const handleSaveAllContent = () => {
     updateContent({
+      doctorName: quickDoctorName,
+      brandTitle: quickBrandTitle,
       title: editTitle,
       intro: editIntro,
       eventTitle: editEventTitle,
@@ -211,6 +219,8 @@ export const AdminPanel: React.FC = () => {
 
   const handleDownloadSettingsJson = () => {
     const data = {
+      doctorName: quickDoctorName,
+      brandTitle: quickBrandTitle,
       eventDate: quickEventDate,
       whatsappUrl: quickWhatsapp,
       eventTitle: content.eventTitle,
@@ -454,11 +464,102 @@ export const AdminPanel: React.FC = () => {
                   <span className="text-2xl">⚡</span>
                   <div>
                     <h3 className="text-sm font-bold text-neutral-900">
-                      Tarih ve WhatsApp Linkini Canlı Olarak Değiştirin
+                      Tarih, WhatsApp Linki ve Üst Alanı Canlı Olarak Değiştirin
                     </h3>
                     <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
-                      Buradan belirlediğiniz tarih ve WhatsApp bağlantısı sitedeki tüm alanlara (Hero sayaç, takvim rozeti, davet kutusu, butonlar ve indirilen takvim dosyasına) anında yansır.
+                      Buradan belirlediğiniz doktor ismi, marka logosu, tarih ve WhatsApp bağlantısı sitedeki ilgili tüm alanlara anında yansır.
                     </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sitenin Üst Kısmı: Doktor İsmi & Logo ("DR. ABDULLAH KESGİN") */}
+              <div className="p-5 rounded-2xl bg-white border border-neutral-200 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-neutral-900 font-bold text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-purple-100 text-[#514177] flex items-center justify-center font-bold text-xs">
+                      ✳
+                    </span>
+                    <span>Sitenin Üst Kısmı: Doktor İsmi & Logo ("DR. ABDULLAH KESGİN")</span>
+                  </div>
+                  <span className="text-[11px] font-mono text-purple-700 bg-purple-50 px-2.5 py-1 rounded-lg font-bold border border-purple-200">
+                    Header Marka Alanı
+                  </span>
+                </div>
+
+                <p className="text-xs text-neutral-600 leading-relaxed">
+                  Sitenin en üst sol köşesinde yer alan <strong>"DR. ABDULLAH KESGİN"</strong> yazısını ve üstündeki marka ismini dilediğiniz gibi güncelleyebilirsiniz.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold text-neutral-700 mb-1.5">
+                      Doktor / Uzman İsmi (Üst Kısım):
+                    </label>
+                    <input
+                      type="text"
+                      value={quickDoctorName}
+                      onChange={(e) => setQuickDoctorName(e.target.value)}
+                      placeholder="DR. ABDULLAH KESGİN"
+                      className="w-full px-3 py-2.5 rounded-xl border border-neutral-300 text-xs font-bold tracking-wider focus:ring-2 focus:ring-purple-500 uppercase"
+                    />
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => setQuickDoctorName('DR. ABDULLAH KESGİN')}
+                        className="px-2 py-1 rounded-md bg-neutral-100 hover:bg-neutral-200 text-[10px] font-semibold text-neutral-700 cursor-pointer"
+                      >
+                        DR. ABDULLAH KESGİN (Varsayılan)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setQuickDoctorName('UZM. DR. ABDULLAH KESGİN')}
+                        className="px-2 py-1 rounded-md bg-neutral-100 hover:bg-neutral-200 text-[10px] font-semibold text-neutral-700 cursor-pointer"
+                      >
+                        UZM. DR. ABDULLAH KESGİN
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setQuickDoctorName('DR. ABDULLAH KESGİN & EKİBİ')}
+                        className="px-2 py-1 rounded-md bg-neutral-100 hover:bg-neutral-200 text-[10px] font-semibold text-neutral-700 cursor-pointer"
+                      >
+                        DR. ABDULLAH KESGİN & EKİBİ
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-neutral-700 mb-1.5">
+                      Marka Başlığı (Üst Metin):
+                    </label>
+                    <input
+                      type="text"
+                      value={quickBrandTitle}
+                      onChange={(e) => setQuickBrandTitle(e.target.value)}
+                      placeholder="detox"
+                      className="w-full px-3 py-2.5 rounded-xl border border-neutral-300 text-xs font-bold focus:ring-2 focus:ring-purple-500"
+                    />
+                    <p className="text-[11px] text-neutral-500 mt-2">
+                      Doktor isminin üzerinde yer alan ana marka metnidir (varsayılan: <strong>detox</strong>).
+                    </p>
+                  </div>
+                </div>
+
+                {/* Header Canlı Önizleme */}
+                <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                  <span className="text-neutral-500 font-medium">Sitede Üst Kısımda Böyle Görünecek:</span>
+                  <div className="inline-flex items-center gap-2 px-3.5 py-2 bg-white rounded-xl border border-neutral-300 shadow-2xs">
+                    <span className="text-base text-neutral-900 leading-none">✳</span>
+                    <span className="flex flex-col text-left">
+                      <strong className="text-sm font-black text-neutral-900 leading-tight">
+                        {quickBrandTitle || 'detox'}
+                      </strong>
+                      {quickDoctorName && (
+                        <span className="text-[9px] font-extrabold text-neutral-500 tracking-wider uppercase leading-tight">
+                          {quickDoctorName}
+                        </span>
+                      )}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1217,10 +1318,37 @@ export const AdminPanel: React.FC = () => {
               <div className="p-5 rounded-2xl bg-white border border-neutral-200 shadow-2xs space-y-4">
                 <h3 className="text-sm font-bold text-neutral-900 flex items-center gap-2">
                   <Smartphone className="w-4 h-4 text-[#514177]" />
-                  <span>Hero Ana Başlık & Açıklama Metinleri</span>
+                  <span>Üst Header Logo & Hero Metinleri</span>
                 </h3>
 
                 <div className="space-y-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 bg-purple-50/50 rounded-xl border border-purple-200">
+                    <div>
+                      <label className="block text-xs font-bold text-neutral-800 mb-1">
+                        Sitenin Üst Kısmındaki Doktor / Uzman İsmi:
+                      </label>
+                      <input
+                        type="text"
+                        value={quickDoctorName}
+                        onChange={(e) => setQuickDoctorName(e.target.value)}
+                        placeholder="DR. ABDULLAH KESGİN"
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 text-xs font-bold uppercase tracking-wider bg-white focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-neutral-800 mb-1">
+                        Logo Marka İsmi:
+                      </label>
+                      <input
+                        type="text"
+                        value={quickBrandTitle}
+                        onChange={(e) => setQuickBrandTitle(e.target.value)}
+                        placeholder="detox"
+                        className="w-full px-3 py-2 rounded-xl border border-neutral-300 text-xs font-bold bg-white focus:ring-2 focus:ring-purple-500"
+                      />
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-xs font-bold text-neutral-700 mb-1">
                       Üst Duyuru Metni:

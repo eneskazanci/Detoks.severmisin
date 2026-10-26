@@ -75,6 +75,12 @@ if (!empty($data['whatsappUrl'])) {
 if (!empty($data['eventTitle'])) {
     $existingSettings['eventTitle'] = $data['eventTitle'];
 }
+if (isset($data['doctorName'])) {
+    $existingSettings['doctorName'] = $data['doctorName'];
+}
+if (isset($data['brandTitle'])) {
+    $existingSettings['brandTitle'] = $data['brandTitle'];
+}
 if (isset($data['posterDateText'])) {
     $existingSettings['posterDateText'] = $data['posterDateText'];
 }
