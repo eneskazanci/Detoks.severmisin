@@ -188,9 +188,20 @@ export interface PosterSlide {
   badge?: string;
 }
 
+export type SocialPlatform = 'instagram' | 'youtube' | 'facebook' | 'tiktok' | 'telegram' | 'whatsapp' | 'twitter' | 'linkedin' | 'website';
+
+export interface SocialMediaAccount {
+  id: string;
+  platform: SocialPlatform;
+  title: string;
+  url: string;
+  enabled?: boolean;
+}
+
 export interface SiteContent {
   doctorName?: string;
   brandTitle?: string;
+  socialLinks?: SocialMediaAccount[];
   announcementText: string;
   announcementSubtext: string;
   title: string;
@@ -253,9 +264,48 @@ export const DEFAULT_POSTER_SLIDES: PosterSlide[] = [
   },
 ];
 
+export const DEFAULT_SOCIAL_LINKS: SocialMediaAccount[] = [
+  {
+    id: 'soc-1',
+    platform: 'instagram',
+    title: 'Instagram',
+    url: 'https://www.instagram.com',
+    enabled: true,
+  },
+  {
+    id: 'soc-2',
+    platform: 'youtube',
+    title: 'YouTube',
+    url: 'https://www.youtube.com',
+    enabled: true,
+  },
+  {
+    id: 'soc-3',
+    platform: 'facebook',
+    title: 'Facebook',
+    url: 'https://www.facebook.com',
+    enabled: false,
+  },
+  {
+    id: 'soc-4',
+    platform: 'telegram',
+    title: 'Telegram',
+    url: 'https://t.me',
+    enabled: false,
+  },
+  {
+    id: 'soc-5',
+    platform: 'website',
+    title: 'Web Sitesi',
+    url: 'https://detoks.severmisin.com',
+    enabled: true,
+  },
+];
+
 export const DEFAULT_SITE_CONTENT: SiteContent = {
   doctorName: 'DR. ABDULLAH KESGİN',
   brandTitle: 'detox',
+  socialLinks: DEFAULT_SOCIAL_LINKS,
   announcementText: 'Kendinize bir akşam ayırın.',
   announcementSubtext: 'Ücretsiz canlı tanıtım semineri',
   title: 'Bedenine kulak ver. Değişime birlikte başlayalım.',
@@ -341,6 +391,7 @@ interface ContentContextType {
   updateSignals: (signals: SignalItem[]) => void;
   updateJourney: (journey: JourneyStep[]) => void;
   updateFaq: (faq: FaqItem[]) => void;
+  updateSocialLinks: (links: SocialMediaAccount[]) => void;
   saveSettingsToHostinger: (
     newDate: string, 
     newWhatsapp: string, 
@@ -350,7 +401,8 @@ interface ContentContextType {
     newSlideIntervalSeconds?: number,
     newSlideTransitionEffect?: SlideTransitionEffect,
     newDoctorName?: string,
-    newBrandTitle?: string
+    newBrandTitle?: string,
+    newSocialLinks?: SocialMediaAccount[]
   ) => Promise<{ success: boolean; message: string }>;
   resetToDefault: () => void;
   
@@ -499,6 +551,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
             eventTitle: data.eventTitle || prev.eventTitle,
             ...(data.doctorName !== undefined ? { doctorName: data.doctorName } : {}),
             ...(data.brandTitle !== undefined ? { brandTitle: data.brandTitle } : {}),
+            ...(Array.isArray(data.socialLinks) ? { socialLinks: data.socialLinks } : {}),
             ...(data.posterDateText !== undefined ? { posterDateText: data.posterDateText } : {}),
             ...(data.hidePosterStaticDate !== undefined ? { hidePosterStaticDate: data.hidePosterStaticDate } : {}),
             ...(Array.isArray(data.posterSlides) && data.posterSlides.length > 0 ? { posterSlides: data.posterSlides } : {}),
@@ -596,6 +649,10 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setContent((prev) => ({ ...prev, faq }));
   };
 
+  const updateSocialLinks = (links: SocialMediaAccount[]) => {
+    setContent((prev) => ({ ...prev, socialLinks: links }));
+  };
+
   const saveSettingsToHostinger = async (
     newDate: string, 
     newWhatsapp: string, 
@@ -605,7 +662,8 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
     newSlideIntervalSeconds?: number,
     newSlideTransitionEffect?: SlideTransitionEffect,
     newDoctorName?: string,
-    newBrandTitle?: string
+    newBrandTitle?: string,
+    newSocialLinks?: SocialMediaAccount[]
   ) => {
     setContent((prev) => ({
       ...prev,
@@ -613,6 +671,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
       whatsappUrl: newWhatsapp,
       ...(newDoctorName !== undefined ? { doctorName: newDoctorName } : {}),
       ...(newBrandTitle !== undefined ? { brandTitle: newBrandTitle } : {}),
+      ...(newSocialLinks !== undefined ? { socialLinks: newSocialLinks } : {}),
       ...(newPosterDateText !== undefined ? { posterDateText: newPosterDateText } : {}),
       ...(newHidePosterStaticDate !== undefined ? { hidePosterStaticDate: newHidePosterStaticDate } : {}),
       ...(newPosterSlides !== undefined ? { posterSlides: newPosterSlides } : {}),
@@ -631,6 +690,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
           eventTitle: content.eventTitle,
           doctorName: newDoctorName !== undefined ? newDoctorName : content.doctorName,
           brandTitle: newBrandTitle !== undefined ? newBrandTitle : content.brandTitle,
+          socialLinks: newSocialLinks !== undefined ? newSocialLinks : content.socialLinks,
           posterDateText: newPosterDateText !== undefined ? newPosterDateText : content.posterDateText,
           hidePosterStaticDate: newHidePosterStaticDate !== undefined ? newHidePosterStaticDate : content.hidePosterStaticDate,
           posterSlides: newPosterSlides !== undefined ? newPosterSlides : content.posterSlides,
@@ -669,6 +729,7 @@ export const ContentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         updateSignals,
         updateJourney,
         updateFaq,
+        updateSocialLinks,
         saveSettingsToHostinger,
         resetToDefault,
         leads,

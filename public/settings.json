@@ -4,6 +4,43 @@
   "eventTitle": "Tıbbi Detoks ve Bütünsel Arınma",
   "doctorName": "DR. ABDULLAH KESGİN",
   "brandTitle": "detox",
+  "socialLinks": [
+    {
+      "id": "soc-1",
+      "platform": "instagram",
+      "title": "Instagram",
+      "url": "https://www.instagram.com",
+      "enabled": true
+    },
+    {
+      "id": "soc-2",
+      "platform": "youtube",
+      "title": "YouTube",
+      "url": "https://www.youtube.com",
+      "enabled": true
+    },
+    {
+      "id": "soc-3",
+      "platform": "facebook",
+      "title": "Facebook",
+      "url": "https://www.facebook.com",
+      "enabled": false
+    },
+    {
+      "id": "soc-4",
+      "platform": "telegram",
+      "title": "Telegram",
+      "url": "https://t.me",
+      "enabled": false
+    },
+    {
+      "id": "soc-5",
+      "platform": "website",
+      "title": "Web Sitesi",
+      "url": "https://detoks.severmisin.com",
+      "enabled": true
+    }
+  ],
   "posterDateText": "",
   "hidePosterStaticDate": true,
   "posterSlides": [

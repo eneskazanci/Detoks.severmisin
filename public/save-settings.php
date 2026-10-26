@@ -81,6 +81,9 @@ if (isset($data['doctorName'])) {
 if (isset($data['brandTitle'])) {
     $existingSettings['brandTitle'] = $data['brandTitle'];
 }
+if (isset($data['socialLinks'])) {
+    $existingSettings['socialLinks'] = $data['socialLinks'];
+}
 if (isset($data['posterDateText'])) {
     $existingSettings['posterDateText'] = $data['posterDateText'];
 }

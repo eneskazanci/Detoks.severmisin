@@ -5,9 +5,14 @@ import {
   MessageCircle, Plus, Trash2, ExternalLink, Download, FileUp, Sparkles,
   LogOut, Lock, KeyRound, Server, Copy, CheckCheck, 
   Eye, EyeOff, AlertCircle, ToggleLeft, ToggleRight, Calendar, ArrowUpRight,
-  Layers, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Play
+  Layers, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Play, Share2, Globe
 } from 'lucide-react';
-import { useSiteContent, FaqItem, SectionVisibility, SignalItem, JourneyStep, PosterSlide, DEFAULT_POSTER_SLIDES, SlideTransitionEffect } from '../context/ContentContext';
+import { 
+  useSiteContent, FaqItem, SectionVisibility, SignalItem, JourneyStep, PosterSlide, 
+  DEFAULT_POSTER_SLIDES, SlideTransitionEffect, SocialMediaAccount, SocialPlatform, 
+  DEFAULT_SOCIAL_LINKS 
+} from '../context/ContentContext';
+import { renderSocialIcon } from './KesginDetoxLanding';
 
 export const AdminPanel: React.FC = () => {
   const { 
@@ -53,6 +58,79 @@ export const AdminPanel: React.FC = () => {
     content.slideTransitionEffect || 'glow-shimmer'
   );
   const [previewSlideIdx, setPreviewSlideIdx] = useState(0);
+
+  // Sosyal Medya Hesapları Durumu
+  const [socialList, setSocialList] = useState<SocialMediaAccount[]>(
+    content.socialLinks && content.socialLinks.length > 0
+      ? content.socialLinks
+      : DEFAULT_SOCIAL_LINKS
+  );
+  const [newPlatformSelect, setNewPlatformSelect] = useState<SocialPlatform>('instagram');
+
+  // Sosyal Medya Yönetim Fonksiyonları
+  const handleAddSocial = (platform: SocialPlatform = newPlatformSelect) => {
+    const platformDefaults: Record<SocialPlatform, { title: string; url: string }> = {
+      instagram: { title: 'Instagram', url: 'https://instagram.com/' },
+      youtube: { title: 'YouTube', url: 'https://youtube.com/' },
+      facebook: { title: 'Facebook', url: 'https://facebook.com/' },
+      tiktok: { title: 'TikTok', url: 'https://tiktok.com/@' },
+      telegram: { title: 'Telegram', url: 'https://t.me/' },
+      whatsapp: { title: 'WhatsApp', url: 'https://chat.whatsapp.com/' },
+      twitter: { title: 'X (Twitter)', url: 'https://x.com/' },
+      linkedin: { title: 'LinkedIn', url: 'https://linkedin.com/in/' },
+      website: { title: 'Web Sitesi', url: 'https://' },
+    };
+
+    const def = platformDefaults[platform] || { title: 'Sosyal Medya', url: 'https://' };
+    const newAccount: SocialMediaAccount = {
+      id: 'soc-' + Date.now(),
+      platform,
+      title: def.title,
+      url: def.url,
+      enabled: true,
+    };
+    setSocialList((prev) => [...prev, newAccount]);
+    triggerToast();
+  };
+
+  const handleUpdateSocial = (index: number, updated: Partial<SocialMediaAccount>) => {
+    setSocialList((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], ...updated };
+      return copy;
+    });
+  };
+
+  const handleToggleSocial = (index: number) => {
+    setSocialList((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], enabled: copy[index].enabled === false ? true : false };
+      return copy;
+    });
+    triggerToast();
+  };
+
+  const handleMoveSocial = (index: number, direction: 'up' | 'down') => {
+    const targetIdx = direction === 'up' ? index - 1 : index + 1;
+    if (targetIdx < 0 || targetIdx >= socialList.length) return;
+    setSocialList((prev) => {
+      const copy = [...prev];
+      const temp = copy[index];
+      copy[index] = copy[targetIdx];
+      copy[targetIdx] = temp;
+      return copy;
+    });
+  };
+
+  const handleRemoveSocial = (index: number) => {
+    setSocialList((prev) => prev.filter((_, idx) => idx !== index));
+    triggerToast();
+  };
+
+  const handleResetSocial = () => {
+    setSocialList(DEFAULT_SOCIAL_LINKS);
+    triggerToast();
+  };
 
   // Content editing state
   const [editTitle, setEditTitle] = useState(content.title || '');
@@ -149,6 +227,7 @@ export const AdminPanel: React.FC = () => {
     updateContent({
       doctorName: quickDoctorName,
       brandTitle: quickBrandTitle,
+      socialLinks: socialList,
       eventDate: quickEventDate,
       whatsappUrl: quickWhatsapp,
       posterDateText: quickPosterDateText,
@@ -167,7 +246,8 @@ export const AdminPanel: React.FC = () => {
       slideInterval,
       slideEffect,
       quickDoctorName,
-      quickBrandTitle
+      quickBrandTitle,
+      socialList
     );
     setIsSavingHostinger(false);
     setHostingerStatus(res.message);
@@ -178,6 +258,7 @@ export const AdminPanel: React.FC = () => {
     updateContent({
       doctorName: quickDoctorName,
       brandTitle: quickBrandTitle,
+      socialLinks: socialList,
       title: editTitle,
       intro: editIntro,
       eventTitle: editEventTitle,
@@ -221,6 +302,7 @@ export const AdminPanel: React.FC = () => {
     const data = {
       doctorName: quickDoctorName,
       brandTitle: quickBrandTitle,
+      socialLinks: socialList,
       eventDate: quickEventDate,
       whatsappUrl: quickWhatsapp,
       eventTitle: content.eventTitle,
@@ -711,6 +793,212 @@ export const AdminPanel: React.FC = () => {
                       <span>Grubu Test Et</span>
                       <ArrowUpRight className="w-4 h-4" />
                     </a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer Sosyal Medya Hesapları Yönetimi */}
+              <div className="p-5 rounded-2xl bg-white border border-neutral-200 shadow-2xs space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 text-neutral-900 font-bold text-sm">
+                    <Share2 className="w-4 h-4 text-purple-700" />
+                    <span>Footer Sosyal Medya Hesapları Yönetimi</span>
+                  </div>
+                  <span className="text-[11px] font-mono text-purple-800 bg-purple-50 px-2.5 py-1 rounded-lg font-bold border border-purple-200">
+                    {socialList.filter((s) => s.enabled !== false).length} Aktif / {socialList.length} Toplam
+                  </span>
+                </div>
+
+                <p className="text-xs text-neutral-600 leading-relaxed">
+                  Sitenin alt (footer) kısmında ziyaretçilerinize sunulacak sosyal medya bağlantılarını (Instagram, YouTube, Facebook, Telegram vb.) buradan ekleyip düzenleyebilirsiniz.
+                </p>
+
+                {/* Yeni Hesap Ekleme Barı */}
+                <div className="p-3 bg-neutral-50 rounded-xl border border-neutral-200 flex flex-wrap items-center justify-between gap-2.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-bold text-neutral-700">Platform Seç:</span>
+                    <select
+                      value={newPlatformSelect}
+                      onChange={(e) => setNewPlatformSelect(e.target.value as SocialPlatform)}
+                      className="px-2.5 py-1.5 rounded-lg border border-neutral-300 text-xs font-bold bg-white text-neutral-800 cursor-pointer focus:ring-2 focus:ring-purple-500"
+                    >
+                      <option value="instagram">📸 Instagram</option>
+                      <option value="youtube">🎥 YouTube</option>
+                      <option value="facebook">📘 Facebook</option>
+                      <option value="telegram">✈️ Telegram</option>
+                      <option value="tiktok">🎵 TikTok</option>
+                      <option value="whatsapp">💬 WhatsApp Hattı</option>
+                      <option value="website">🌐 Web Sitesi</option>
+                      <option value="twitter">🐦 X (Twitter)</option>
+                      <option value="linkedin">💼 LinkedIn</option>
+                    </select>
+                    <button
+                      type="button"
+                      onClick={() => handleAddSocial(newPlatformSelect)}
+                      className="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center gap-1 cursor-pointer shadow-xs transition-all active:scale-95"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Hesap Ekle</span>
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleResetSocial}
+                    className="px-2.5 py-1.5 rounded-lg bg-white hover:bg-neutral-100 text-neutral-600 text-xs font-semibold border border-neutral-200 cursor-pointer"
+                    title="Varsayılan sosyal medya listesine dön"
+                  >
+                    <span>Varsayılanlara Sıfırla</span>
+                  </button>
+                </div>
+
+                {/* Hesaplar Listesi */}
+                <div className="space-y-3">
+                  {socialList.length === 0 ? (
+                    <div className="p-4 rounded-xl bg-neutral-50 text-center text-xs text-neutral-500">
+                      Henüz sosyal medya hesabı eklenmedi. Yukarıdan dilediğiniz platformu seçip ekleyebilirsiniz.
+                    </div>
+                  ) : (
+                    socialList.map((item, idx) => {
+                      const isEnabled = item.enabled !== false;
+                      return (
+                        <div
+                          key={item.id || idx}
+                          className={`p-3.5 rounded-xl border transition-all space-y-2.5 ${
+                            isEnabled
+                              ? 'bg-white border-neutral-200 shadow-2xs'
+                              : 'bg-neutral-50 border-neutral-200 opacity-60'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-2 border-b border-neutral-100 pb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="w-7 h-7 rounded-full bg-purple-50 text-purple-700 border border-purple-200 flex items-center justify-center">
+                                {renderSocialIcon(item.platform, 'w-3.5 h-3.5')}
+                              </span>
+                              <select
+                                value={item.platform}
+                                onChange={(e) => handleUpdateSocial(idx, { platform: e.target.value as SocialPlatform })}
+                                className="px-2 py-1 rounded border border-neutral-200 text-xs font-bold text-neutral-800 bg-white"
+                              >
+                                <option value="instagram">Instagram</option>
+                                <option value="youtube">YouTube</option>
+                                <option value="facebook">Facebook</option>
+                                <option value="telegram">Telegram</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="whatsapp">WhatsApp</option>
+                                <option value="website">Web Sitesi</option>
+                                <option value="twitter">X (Twitter)</option>
+                                <option value="linkedin">LinkedIn</option>
+                              </select>
+                            </div>
+
+                            <div className="flex items-center gap-1.5">
+                              {/* Açık / Kapalı Toggle */}
+                              <button
+                                type="button"
+                                onClick={() => handleToggleSocial(idx)}
+                                className={`px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors ${
+                                  isEnabled
+                                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                                    : 'bg-neutral-200 text-neutral-600'
+                                }`}
+                              >
+                                {isEnabled ? 'Sitede Açık' : 'Gizli'}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => handleMoveSocial(idx, 'up')}
+                                disabled={idx === 0}
+                                className="p-1 rounded bg-neutral-100 hover:bg-neutral-200 text-neutral-700 disabled:opacity-30 cursor-pointer"
+                                title="Yukarı Taşı"
+                              >
+                                <ChevronUp className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleMoveSocial(idx, 'down')}
+                                disabled={idx === socialList.length - 1}
+                                className="p-1 rounded bg-neutral-100 hover:bg-neutral-200 text-neutral-700 disabled:opacity-30 cursor-pointer"
+                                title="Aşağı Taşı"
+                              >
+                                <ChevronDown className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveSocial(idx)}
+                                className="p-1 rounded bg-rose-50 hover:bg-rose-100 text-rose-600 cursor-pointer ml-1"
+                                title="Hesabı Sil"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-center">
+                            <div className="sm:col-span-4">
+                              <label className="block text-[10px] font-bold text-neutral-500 mb-0.5">
+                                Görünen İsim:
+                              </label>
+                              <input
+                                type="text"
+                                value={item.title}
+                                onChange={(e) => handleUpdateSocial(idx, { title: e.target.value })}
+                                placeholder="Örn: Instagram"
+                                className="w-full px-2.5 py-1.5 rounded-lg border border-neutral-300 text-xs font-bold bg-white"
+                              />
+                            </div>
+
+                            <div className="sm:col-span-8">
+                              <label className="block text-[10px] font-bold text-neutral-500 mb-0.5">
+                                Profil / Kanal URL Adresi:
+                              </label>
+                              <div className="flex items-center gap-1.5">
+                                <input
+                                  type="url"
+                                  value={item.url}
+                                  onChange={(e) => handleUpdateSocial(idx, { url: e.target.value })}
+                                  placeholder="https://..."
+                                  className="flex-1 px-2.5 py-1.5 rounded-lg border border-neutral-300 text-xs font-mono bg-white focus:ring-1 focus:ring-purple-500"
+                                />
+                                {item.url && (
+                                  <a
+                                    href={item.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-1.5 rounded-lg bg-neutral-100 hover:bg-purple-100 text-neutral-700 hover:text-purple-800 cursor-pointer border border-neutral-200"
+                                    title="Bağlantıyı Yeni Sekmede Aç"
+                                  >
+                                    <ExternalLink className="w-3.5 h-3.5" />
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+
+                {/* Footer Canlı Önizlemesi */}
+                <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 space-y-2">
+                  <span className="text-xs text-neutral-500 font-semibold block">
+                    Sitede Footer Alanında Böyle Görünecek:
+                  </span>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[10px] font-extrabold text-[#5932ad] tracking-wider uppercase">
+                      Bizi Takip Edin:
+                    </span>
+                    {socialList.filter((s) => s.enabled !== false && s.url).map((item) => (
+                      <span
+                        key={item.id}
+                        title={item.title}
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#f3eefb] text-[#514177] border border-[#dfcef6] shadow-2xs"
+                      >
+                        {renderSocialIcon(item.platform, 'w-3.5 h-3.5')}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -1490,6 +1778,31 @@ export const AdminPanel: React.FC = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Footer Sosyal Medya Kartı */}
+              <div className="p-5 rounded-2xl bg-white border border-neutral-200 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                    <Share2 className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-neutral-900">
+                      Footer Sosyal Medya Hesapları ({socialList.filter(s => s.enabled !== false).length} Aktif / {socialList.length} Toplam)
+                    </h4>
+                    <p className="text-[11px] text-neutral-500 mt-0.5 leading-relaxed">
+                      Instagram, YouTube, Facebook, Telegram ve diğer sosyal bağlantılarınızı "Hızlı Ayarlar" sekmesinden kolayca ekleyebilir ve sıralayabilirsiniz.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('quick')}
+                  className="px-3.5 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 text-xs font-bold shrink-0 border border-purple-200 cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>Sosyal Medyayı Yönet</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </button>
               </div>
 
               {/* Tıbbi Not */}
